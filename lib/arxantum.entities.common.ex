@@ -4,14 +4,9 @@ defmodule Arxantum.Entities.Common do
         Map.get(:inserted_id)
     end
 
-    def attach_model_id(new_entry, model_id) do
-        new_entry |>
-        Map.put("model_id", model_id);
-    end
-
-    def attach_new_id(new_entry, id) do
-        new_entry |>
-        Map.put("_id", id)
+    def attach_property(entry, prop, val) do
+        entry |>
+        Map.put(prop, val);
     end
 
     def form_list(list, skip, take) do

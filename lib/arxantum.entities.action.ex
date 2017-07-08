@@ -18,10 +18,10 @@ defmodule Arxantum.Entities.Action do
     end
 
     def handle_cast({:insert, new_entry, model_id}, actions) do
-        new_entry = Common.attach_model_id(new_entry, model_id)
+        new_entry = Common.attach_property(new_entry, "model_id", model_id)
         {:ok, result} = Mongo.insert_one(:mongo, "actions-collection", new_entry)
         id = Common.get_new_id(result)
-        new_entry_plus_id = Common.attach_new_id(new_entry, id)
+        new_entry_plus_id = Common.attach_property(new_entry, "_id", id)
         {:noreply, [new_entry_plus_id | actions]}
     end
 
