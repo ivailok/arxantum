@@ -2,6 +2,8 @@ defmodule Arxantum do
   use Application
 
   alias Arxantum.Entities.Model
+  alias Arxantum.Entities.Instance
+  alias Arxantum.Entities.Action
 
   @db_name Application.get_env(:arxantum, :db_name)
 
@@ -15,5 +17,25 @@ defmodule Arxantum do
 
   def list_models(skip \\ 0, take \\ 10) do
     GenServer.call(Model, {:list, skip, take})
+  end
+
+  def create_model_instance(new_entity, model_id) do
+    GenServer.cast(Instance, {:insert, new_entity, model_id})
+  end
+
+  def list_instances_of_model(model_id, skip \\ 0, take \\ 10) do
+    GenServer.call(Instance, {:list, model_id, skip, take})
+  end
+
+  def list_instances(skip \\ 0, take \\ 10) do
+    GenServer.call(Instance, {:list, skip, take})
+  end
+
+  def list_actions_of_model(model_id, skip \\ 0, take \\ 10) do
+    GenServer.call(Action, {:list, model_id, skip, take})
+  end
+
+  def create_model_action(new_entity, model_id) do
+    GenServer.cast(Action, {:insert, new_entity, model_id})
   end
 end
