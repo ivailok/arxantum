@@ -1,6 +1,8 @@
 defmodule Arxantum.Entities.Instance do
     use GenServer
 
+    alias Arxantum.Entities.Common
+
     def start_link() do
         GenServer.start_link(__MODULE__, nil, name: __MODULE__)
     end
@@ -16,37 +18,20 @@ defmodule Arxantum.Entities.Instance do
     end
 
     def handle_cast({:insert, new_entry, model_id}, instances) do
-
-        new_entry = 
-            new_entry |> 
-            Map.put("model_id", model_id);
+        new_entry = Common.attach_model_id(new_entry, model_id)
         {:ok, result} = Mongo.insert_one(:mongo, "instances-collection", new_entry)
-
-        id =
-            result |>
-            Map.get(:inserted_id)
-
-        new_entry_plus_id = 
-            new_entry |>
-            Map.put("_id", id)
-
+        id = Common.get_new_id(result)
+        new_entry_plus_id = Common.attach_new_id(new_entry, id)
         {:noreply, [new_entry_plus_id | instances]}
     end
 
     def handle_call({:list, model_id, skip, take}, _from, instances) do
-        result = 
-            instances |>
-            Enum.filter(fn i -> i["model_id"] == model_id end) |>
-            Enum.drop(skip) |>
-            Enum.take(take)
+        result = Common.form_list(instances |> Enum.filter(fn i -> i["model_id"] == model_id end), skip, take)
         {:reply, result, instances}
     end
 
     def handle_call({:list, skip, take}, _from, instances) do
-        result = 
-            instances |>
-            Enum.drop(skip) |>
-            Enum.take(take)
+        result = Common.form_list(instances, skip, take)
         {:reply, result, instances}
     end
 
