@@ -19,16 +19,20 @@ defmodule Arxantum do
     GenServer.call(Model, {:list, skip, take})
   end
 
-  def create_model_instance(new_entity, model_id) do
-    GenServer.cast(Instance, {:insert, new_entity, model_id})
+  def create_model_instance(new_entity, model_id, unique_instance_id, action_id) do
+    GenServer.cast(Instance, {:insert, new_entity, model_id, unique_instance_id, action_id})
   end
 
   def list_instances_of_model(model_id, skip \\ 0, take \\ 10) do
-    GenServer.call(Instance, {:list, model_id, skip, take})
+    GenServer.call(Instance, {:list_by_model, model_id, skip, take})
   end
 
   def list_instances(skip \\ 0, take \\ 10) do
-    GenServer.call(Instance, {:list, skip, take})
+    GenServer.call(Instance, {:list_all, skip, take})
+  end
+
+  def list_unique_instances(unique_instance_id, skip \\ 0, take \\ 10) do
+    GenServer.call(Instance, {:list_by_unique_instance_id, unique_instance_id, skip, take})
   end
 
   def list_actions_of_model(model_id, skip \\ 0, take \\ 10) do
