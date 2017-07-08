@@ -21,7 +21,7 @@ defmodule Arxantum.Entities.Action do
         new_entry = 
             new_entry |>
             Common.attach_property("model_id", model_id) |>
-            Common.attach_property("created_date", DateTime.utc_now)
+            Common.attach_property("created_date", DateTime.utc_now |> DateTime.to_string)
         {:ok, result} = Mongo.insert_one(:mongo, "actions-collection", new_entry)
         id = Common.get_new_id(result)
         new_entry_plus_id = Common.attach_property(new_entry, "_id", id)

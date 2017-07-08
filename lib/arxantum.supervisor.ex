@@ -8,6 +8,7 @@ defmodule Arxantum.Supervisor do
     def init(db_name) do
         children = [
             worker(Mongo, [[name: :mongo, database: db_name]]),
+            worker(Arxantum.Token.Validator, []),
             supervisor(Arxantum.Entities.Supervisor, [])
         ]
 

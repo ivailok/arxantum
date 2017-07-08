@@ -23,7 +23,7 @@ defmodule Arxantum.Entities.Instance do
             Common.attach_property("model_id", model_id) |>
             Common.attach_property("unique_instance_id", unique_instance_id) |>
             Common.attach_property("action_id", action_id) |>
-            Common.attach_property("created_date", DateTime.utc_now)
+            Common.attach_property("created_date", DateTime.utc_now |> DateTime.to_string)
         
         {:ok, result} = Mongo.insert_one(:mongo, "instances-collection", new_entry)
         id = Common.get_new_id(result)

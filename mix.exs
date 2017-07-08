@@ -29,6 +29,7 @@ defmodule Arxantum.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:mongodb, ">= 0.0.0"}]
+    [{:mongodb, ">= 0.0.0"},
+     {:ex_doc, "~> 0.14", only: :dev}]
   end
 end
