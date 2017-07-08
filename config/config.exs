@@ -30,4 +30,5 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :arxantum,
-  dbName = "arxantum_db"
+  db_name: "arxantum_db",
+  model_collection_name: "model_collection"

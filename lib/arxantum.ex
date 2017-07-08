@@ -1,18 +1,19 @@
 defmodule Arxantum do
-  @moduledoc """
-  Documentation for Arxantum.
-  """
+  use Application
 
-  @doc """
-  Hello world.
+  alias Arxantum.Entities.Model
 
-  ## Examples
+  @db_name Application.get_env(:arxantum, :db_name)
 
-      iex> Arxantum.hello
-      :world
+  def start(_type, _args) do
+    Arxantum.Supervisor.start_link(@db_name)
+  end
 
-  """
-  def hello do
-    :world
+  def create_model(new_model) do
+    GenServer.cast(Model, {:insert, new_model})
+  end
+
+  def list_models(skip \\ 0, take \\ 10) do
+    GenServer.call(Model, {:list, skip, take})
   end
 end

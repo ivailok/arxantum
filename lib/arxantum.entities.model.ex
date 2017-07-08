@@ -1,4 +1,4 @@
-defmodule Arxantum.Model do
+defmodule Arxantum.Entities.Model do
     use GenServer
 
     def start_link() do
@@ -16,8 +16,17 @@ defmodule Arxantum.Model do
     end
 
     def handle_cast({:insert, new_entry}, models) do
-        Mongo.insert_one(:mongo, "models-collection", %{id: 1})
-        {:noreply, [new_entry | models]}
+        {:ok, result} = Mongo.insert_one(:mongo, "models-collection", new_entry)
+
+        id =
+            result |>
+            Map.get(:inserted_id)
+
+        new_entry_plus_id = 
+            new_entry |>
+            Map.put("_id", id)
+
+        {:noreply, [new_entry_plus_id | models]}
     end
 
     def handle_call({:list, skip, take}, _from, models) do

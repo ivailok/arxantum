@@ -1,19 +1,17 @@
 defmodule Arxantum.Supervisor do
     use Supervisor
 
-    alias Arxantum.Model
-
-    def start_link() do
-        Supervisor.start_link(__MODULE__, nil, name: __MODULE__)
+    def start_link(db_name) do
+        Supervisor.start_link(__MODULE__, db_name, name: __MODULE__)
     end
 
-    def init(_) do
+    def init(db_name) do
         children = [
-            worker(Mongo, [[name: :mongo, database: "test"]]),
-            worker(Model, [])
+            worker(Mongo, [[name: :mongo, database: db_name]]),
+            supervisor(Arxantum.Entities.Supervisor, [])
         ]
 
-        opts = [strategy: :one_for_one]
+        opts = [strategy: :one_for_all]
         supervise(children, opts)
     end
 end
